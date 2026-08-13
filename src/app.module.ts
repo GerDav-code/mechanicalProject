@@ -4,6 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { VehiculosModule } from './modules/vehiculos/vehiculos.module';
 import { UsersModule } from './modules/users/users.module'; 
+// Recuperamos las importaciones de los otros módulos:
+import { RescuesModule } from './modules/rescues/rescues.module';
+import { TrackingModule } from './modules/tracking/tracking.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,6 +23,9 @@ import { UsersModule } from './modules/users/users.module';
     }),
     VehiculosModule,
     UsersModule,
+    RescuesModule,
+    TrackingModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
