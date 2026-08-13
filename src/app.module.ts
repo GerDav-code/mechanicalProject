@@ -3,8 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { VehiculosModule } from './modules/vehiculos/vehiculos.module';
-import { UsersModule } from './modules/users/users.module'; // Ajusta el nombre si lo generaste como UsuariosModule
-
+import { UsersModule } from './modules/users/users.module'; 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
