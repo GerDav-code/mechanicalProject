@@ -89,4 +89,27 @@ export class RescuesService {
       order: { createdAt: 'DESC' },
     });
   }
+
+  async findNearbyPendingRescues(
+    lat: number,
+    lng: number,
+    radiusKm: number = 10,
+  ): Promise<Rescue[]> {
+    const haversineFormula = `
+      (6371 * acos(
+        cos(radians(:lat)) * cos(radians(rescue.latitude)) *
+        cos(radians(rescue.longitude) - radians(:lng)) +
+        sin(radians(:lat)) * sin(radians(rescue.latitude))
+      ))
+    `;
+
+    return await this.rescueRepository
+      .createQueryBuilder('rescue')
+      .addSelect(haversineFormula, 'distance')
+      .where('rescue.status = :status', { status: RescueStatus.PENDING })
+      .andWhere(`${haversineFormula} <= :radiusKm`, { radiusKm })
+      .setParameters({ lat, lng, radiusKm })
+      .orderBy('distance', 'ASC')
+      .getMany();
+  }
 }
