@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateRescueDto } from './dto/create-rescue.dto';
@@ -15,6 +16,8 @@ import { UpdateRescueDto } from './dto/update-rescue.dto';
 import { Rescue } from './entities/rescue.entity';
 import { RescuesService } from './rescues.service';
 
+@ApiTags('Rescues') 
+@ApiBearerAuth()
 @Controller('rescues')
 @UseGuards(JwtAuthGuard)
 export class RescuesController {
