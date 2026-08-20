@@ -35,4 +35,6 @@ export class UsersService {
   async toggleMechanicAvailability(id: string, isAvailable: boolean): Promise<void> { 
     await this.userRepository.update(id, { isAvailable });
   }
+
+  
 }

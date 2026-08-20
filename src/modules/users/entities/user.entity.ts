@@ -1,5 +1,6 @@
+import { Vehiculo } from 'src/modules/vehiculos/entities/vehiculo.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-// import { Vehicle } from '../../vehicles/entities/vehicle.entity';
+
 
 export enum UserRole {
   CLIENTE = 'CLIENTE',
@@ -33,8 +34,8 @@ export class User {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
-  // @OneToMany(() => Vehicle, vehicle => vehicle.client)
-  // vehicles: Vehicle[];
+  @OneToMany(() => Vehiculo, Vehiculo => Vehiculo.user)
+  vehiculo!: Vehiculo[];
 
   @CreateDateColumn()
   createdAt!: Date;
