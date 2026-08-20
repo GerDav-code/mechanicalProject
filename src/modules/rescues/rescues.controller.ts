@@ -6,21 +6,26 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateRescueDto } from './dto/create-rescue.dto';
 import { UpdateRescueDto } from './dto/update-rescue.dto';
 import { Rescue } from './entities/rescue.entity';
 import { RescuesService } from './rescues.service';
 
-@Controller('rescues') // Ruta base: http://localhost:3000/rescues
+@Controller('rescues')
+@UseGuards(JwtAuthGuard)
 export class RescuesController {
   constructor(private readonly rescuesService: RescuesService) {}
 
   @Post()
-  async create(@Body() createRescueDto: CreateRescueDto): Promise<Rescue> {
-    const mockClientId = 'a123e456-e89b-12d3-a456-426614174000';
-
-    return this.rescuesService.create(createRescueDto, mockClientId);
+  async create(
+    @Body() createRescueDto: CreateRescueDto,
+    @GetUser('userId') clientId: string, 
+  ): Promise<Rescue> {
+    return this.rescuesService.create(createRescueDto, clientId);
   }
 
   @Get('pending')
