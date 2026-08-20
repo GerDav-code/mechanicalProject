@@ -10,7 +10,7 @@ export class UpdateRescueDto {
   @IsNotEmpty({ message: 'El estado del servicio es obligatorio' })
   status!: RescueStatus;
 
-  @IsUUID('4', { message: 'El ID del mecánico debe ser un UUID válido' })
+  @IsUUID('all', { message: 'El ID del mecánico debe ser un UUID válido' })
   @IsOptional()
   mechanicId?: string;
 }
