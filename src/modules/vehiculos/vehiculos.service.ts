@@ -25,7 +25,7 @@ export class VehiculosService {
     return await this.vehiculoRepository.save(vehiculo);
   }
 
- async findAll(): Promise<Vehiculo[]> {
+  async findAll(): Promise<Vehiculo[]> {
     return await this.vehiculoRepository.find({ 
       relations: { user: true }
     });
@@ -45,6 +45,18 @@ export class VehiculosService {
 
   async findByUserId(userId: string): Promise<Vehiculo[]> {
     return await this.vehiculoRepository.find({ where: { userId } });
+  }
+
+  async setAsPrincipal(id: string): Promise<Vehiculo> {
+    const vehiculo = await this.findOne(id);
+    
+    await this.vehiculoRepository.update(
+      { userId: vehiculo.userId }, 
+      { esPrincipal: false }
+    );
+
+    vehiculo.esPrincipal = true;
+    return await this.vehiculoRepository.save(vehiculo);
   }
 
   async update(id: string, updateVehiculoDto: UpdateVehiculoDto): Promise<Vehiculo> {

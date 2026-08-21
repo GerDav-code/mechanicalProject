@@ -1,8 +1,9 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto'; 
 
 @Injectable()
 export class UsersService {
@@ -48,4 +49,17 @@ export class UsersService {
     await this.userRepository.update(id, { isActive });
   }
   
+  async updateProfile(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+    
+    if (updateUserDto.password) {
+      delete updateUserDto.password; 
+    }
+    
+    const updatedUser = Object.assign(user, updateUserDto);
+    return await this.userRepository.save(updatedUser);
+  }
 }
