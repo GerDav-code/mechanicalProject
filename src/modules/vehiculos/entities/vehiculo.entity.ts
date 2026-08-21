@@ -15,8 +15,14 @@ export class Vehiculo {
   @Column({ type: 'int' })
   anio!: number;
 
+  @Column({ type: 'varchar', length: 30 })
+  color!: string;
+
   @Column({ type: 'varchar', length: 20, unique: true })
   placas!: string;
+
+  @Column({ type: 'boolean', default: false })
+  esPrincipal!: boolean;
 
   @Column()
   userId!: string;

@@ -8,12 +8,12 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
 
 @Controller('vehiculos')
-@UseGuards(JwtAuthGuard,RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class VehiculosController {
   constructor(private readonly vehiculosService: VehiculosService) {}
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.MECANICO)
+  @Roles(UserRole.ADMIN, UserRole.MECANICO, UserRole.CLIENTE)
   create(@Body() createVehiculoDto: CreateVehiculoDto) {
     return this.vehiculosService.create(createVehiculoDto);
   }
@@ -31,6 +31,11 @@ export class VehiculosController {
   @Get('usuario/:userId')
   findByUserId(@Param('userId') userId: string) {
     return this.vehiculosService.findByUserId(userId);
+  }
+
+  @Patch(':id/principal')
+  setAsPrincipal(@Param('id') id: string) {
+    return this.vehiculosService.setAsPrincipal(id);
   }
 
   @Patch(':id')
