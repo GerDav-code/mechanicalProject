@@ -9,6 +9,7 @@ import { RescuesModule } from './modules/rescues/rescues.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TrackingModule,
     NotificationsModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

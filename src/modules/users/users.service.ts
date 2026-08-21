@@ -36,5 +36,16 @@ export class UsersService {
     await this.userRepository.update(id, { isAvailable });
   }
 
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
+  }
+
+  async updateRole(id: string, role: string): Promise<void> {
+    await this.userRepository.update(id, { role: role as any });
+  }
+
+  async toggleUserStatus(id: string, isActive: boolean): Promise<void> {
+    await this.userRepository.update(id, { isActive });
+  }
   
 }
