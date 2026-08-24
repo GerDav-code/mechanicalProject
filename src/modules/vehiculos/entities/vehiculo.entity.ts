@@ -31,6 +31,24 @@ export class Vehiculo {
   @JoinColumn({ name: 'userId' })
   user!: User;
 
+  @Column({ type: 'varchar', nullable: true })
+  tipo!: string; // Ej: Grúa Plataforma, Taller Móvil
+
+  @Column({ type: 'varchar', nullable: true })
+  vin!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  capacidad!: string; // Ej: 3.5 Toneladas
+
+  @Column({ type: 'varchar', nullable: true })
+  numPolizaSeguro!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  vigenciaSeguro!: string;
+
+  @Column({ type: 'jsonb', nullable: true, default: [] })
+  equipamiento!: string[]; 
+
   @CreateDateColumn()
   createdAt!: Date;
 

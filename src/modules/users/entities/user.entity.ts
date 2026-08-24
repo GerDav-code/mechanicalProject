@@ -45,6 +45,27 @@ export class User {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
+  @Column({ type: 'varchar', default: 'pending' })
+  validationStatus!: string; 
+
+  @Column({ type: 'int', default: 0 })
+  experiencia!: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  especialidades!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  avatarUrl!: string;
+
+  @Column({ type: 'boolean', default: false })
+  identificacionOficial!: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  licenciaEspecial!: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  polizaSeguro!: boolean;
+
   @OneToMany(() => Vehiculo, Vehiculo => Vehiculo.user)
   vehiculo!: Vehiculo[];
 

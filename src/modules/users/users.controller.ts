@@ -14,6 +14,12 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('mecanicos/lista')
+  getMechanicsList() {
+    return this.usersService.findMechanicsList();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findById(id);
@@ -34,5 +40,14 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto
   ) {
     return this.usersService.updateProfile(id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/validar')
+  validateMechanic(
+    @Param('id') id: string,
+    @Body('validationStatus') status: string
+  ) {
+    return this.usersService.updateValidationStatus(id, status);
   }
 }

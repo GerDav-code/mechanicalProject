@@ -1,7 +1,7 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Vehiculo } from '../vehiculos/entities/vehiculo.entity';
@@ -99,4 +99,19 @@ export class UsersService {
     }
     return user;
   }
+ 
+  async findMechanicsList(): Promise<User[]> {
+    return await this.userRepository.find({
+      where: { role: UserRole.MECANICO as any },
+      relations: { vehiculo: true }, 
+      order: { createdAt: 'DESC' } 
+    });
+  }
+
+  async updateValidationStatus(id: string, status: string): Promise<User> {
+    const user = await this.findById(id);
+    user.validationStatus = status;
+    return await this.userRepository.save(user);
+  }
+
 }
