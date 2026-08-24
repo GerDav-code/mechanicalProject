@@ -1,74 +1,102 @@
-import { Vehiculo } from 'src/modules/vehiculos/entities/vehiculo.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Vehiculo } from '../vehiculos/entities/vehiculo.entity';
+import * as bcrypt from 'bcrypt'; 
 
-export enum UserRole {
-  CLIENTE = 'CLIENTE',
-  MECANICO = 'MECANICO',
-  ADMIN = 'ADMIN',
-}
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Vehiculo)
+    private readonly vehiculoRepository: Repository<Vehiculo>,
+  ) {}
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const existingUser = await this.userRepository.findOne({ 
+      where: { email: createUserDto.email } 
+    });
+    
+    if (existingUser) {
+      throw new ConflictException('El correo ya está registrado');
+    }
 
-  @Column({ type: 'varchar', length: 50 })
-  firstName!: string;
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
 
-  @Column({ type: 'varchar', length: 50 })
-  lastName!: string;
+    const { vehiculo, password, ...userData } = createUserDto;
+   
+    const user = this.userRepository.create(userData);
+    user.passwordHash = hashedPassword; 
 
-  @Column({ type: 'varchar', unique: true })
-  email!: string;
+    const savedUser = await this.userRepository.save(user);
 
-  @Column({ type: 'varchar' })
-  passwordHash!: string; 
+   if (vehiculo) {
+      const nuevoVehiculo = this.vehiculoRepository.create({
+        ...vehiculo,
+        user: savedUser,
+      });
+      await this.vehiculoRepository.save(nuevoVehiculo);
+    }
 
-  @Column({ type: 'varchar', length: 20 })
-  phone!: string;
+    return savedUser;
+  }
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
-  emergencyPhone!: string;
+  async findByEmail(email: string): Promise<User | null> { 
+    return await this.userRepository.findOne({ where: { email, isActive: true } });
+  }
 
-  @Column({ type: 'boolean', default: true })
-  liveNotifications!: boolean;
+  async toggleMechanicAvailability(id: string, isAvailable: boolean): Promise<void> { 
+    await this.userRepository.update(id, { isAvailable });
+  }
 
-  @Column({ type: 'boolean', default: true })
-  highPrecisionGps!: boolean;
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
+  }
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENTE })
-  role!: UserRole;
+  async updateRole(id: string, role: string): Promise<void> {
+    await this.userRepository.update(id, { role: role as any });
+  }
 
-  @Column({ type: 'boolean', default: false })
-  isAvailable!: boolean; 
+  async toggleUserStatus(id: string, isActive: boolean): Promise<void> {
+    await this.userRepository.update(id, { isActive });
+  }
+  
+  async updateProfile(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+    
+    if (updateUserDto.password) {
+      delete updateUserDto.password; 
+    }
+    
+    const updatedUser = Object.assign(user, updateUserDto);
+    return await this.userRepository.save(updatedUser);
+  }
 
-  @Column({ type: 'boolean', default: true })
-  isActive!: boolean;
-
-  @Column({ type: 'varchar', nullable: true })
-  especialidades!: string;
-
-  @Column({ type: 'int', nullable: true })
-  experiencia!: number;
-
-  @Column({ type: 'text', nullable: true })
-  descripcion!: string;
-
-  @Column({ type: 'boolean', default: false })
-  identificacionOficial!: boolean;
-
-  @Column({ type: 'boolean', default: false })
-  licenciaEspecial!: boolean;
-
-  @Column({ type: 'boolean', default: false })
-  polizaSeguro!: boolean;
-
-  @OneToMany(() => Vehiculo, Vehiculo => Vehiculo.user)
-  vehiculo!: Vehiculo[];
-
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ 
+      where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        emergencyPhone: true,
+        role: true
+      }
+    });
+    
+    if (!user) {
+      throw new NotFoundException(`Usuario no encontrado`);
+    }
+    return user;
+  }
 }
