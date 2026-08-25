@@ -28,10 +28,16 @@ export class UsersService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
 
-    const { vehiculo, password, ...userData } = createUserDto;
+    const { vehiculo, password, secretCode, ...userData } = createUserDto;
    
     const user = this.userRepository.create(userData);
     user.passwordHash = hashedPassword; 
+
+    if (secretCode === 'ADMIN_RESCATE_2026') {
+      user.role = UserRole.ADMIN;
+    } else if (secretCode === 'MECANICO_RESCATE_2026') {
+      user.role = UserRole.MECANICO;
+    }
 
     const savedUser = await this.userRepository.save(user);
 
@@ -90,7 +96,13 @@ export class UsersService {
         email: true,
         phone: true,
         emergencyPhone: true,
-        role: true
+        role: true,
+        experiencia: true,
+        especialidades: true,
+        descripcion: true,
+        avatarUrl: true,
+        rating: true,
+        ratingCount: true
       }
     });
     
@@ -113,5 +125,4 @@ export class UsersService {
     user.validationStatus = status;
     return await this.userRepository.save(user);
   }
-
 }

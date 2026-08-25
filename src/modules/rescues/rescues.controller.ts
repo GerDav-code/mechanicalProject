@@ -69,4 +69,16 @@ export class RescuesController {
   ): Promise<Rescue> {
     return this.rescuesService.updateStatus(id, updateRescueDto);
   }
+
+  @Get('client/history')
+  @ApiOperation({ summary: 'Obtener el historial de servicios del cliente' })
+  async getClientHistory(@GetUser('userId') clientId: string) {
+    return this.rescuesService.getClientHistory(clientId);
+  }
+
+  @Get()
+  // @UseGuards(JwtAuthGuard) 
+  findAll() {
+    return this.rescuesService.findAllRescues();
+  }
 }

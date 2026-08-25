@@ -46,6 +46,9 @@ export class Rescue {
   status!: RescueStatus;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  estimatedCost?: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   totalCost?: number;
 
   @Column({ type: 'text', nullable: true })

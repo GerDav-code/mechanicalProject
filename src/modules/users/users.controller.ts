@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id/perfil')
+  @Patch(':id')
   updateProfile(
     @Param('id') id: string, 
     @Body() updateUserDto: UpdateUserDto
