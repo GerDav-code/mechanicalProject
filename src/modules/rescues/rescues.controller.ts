@@ -43,6 +43,12 @@ export class RescuesController {
     );
   }
 
+  @Get('mechanic/dashboard')
+  @ApiOperation({ summary: 'Obtener estadísticas e historial del mecánico' })
+  async getMechanicDashboard(@GetUser('userId') mechanicId: string) {
+    return this.rescuesService.getMechanicDashboard(mechanicId);
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Rescue> {
     return this.rescuesService.findOne(id);

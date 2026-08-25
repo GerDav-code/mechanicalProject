@@ -62,4 +62,6 @@ export class CreateUserDto {
   @IsOptional()
   polizaSeguro?: boolean;
 
+  @IsOptional()
+  vehiculo?: any
 }

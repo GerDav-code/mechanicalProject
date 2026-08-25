@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, UseGuards, Get } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto'; 
@@ -11,6 +11,18 @@ export class UsersController {
   @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('mecanicos/lista')
+  getMechanicsList() {
+    return this.usersService.findMechanicsList();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findById(id);
   }
 
   @Patch(':id/availability')
@@ -28,5 +40,14 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto
   ) {
     return this.usersService.updateProfile(id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/validar')
+  validateMechanic(
+    @Param('id') id: string,
+    @Body('validationStatus') status: string
+  ) {
+    return this.usersService.updateValidationStatus(id, status);
   }
 }

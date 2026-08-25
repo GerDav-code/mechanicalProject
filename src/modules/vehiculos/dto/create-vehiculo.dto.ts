@@ -29,4 +29,22 @@ export class CreateVehiculoDto {
   @IsUUID()
   @IsNotEmpty()
   userId!: string;
+
+  @IsOptional()
+  tipo?: string;
+
+  @IsOptional()
+  vin?: string;
+
+  @IsOptional()
+  capacidad?: string;
+
+  @IsOptional()
+  numPolizaSeguro?: string;
+
+  @IsOptional()
+  vigenciaSeguro?: string;
+
+  @IsOptional()
+  equipamiento?: string[];
 }
