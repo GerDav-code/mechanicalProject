@@ -3,6 +3,7 @@ export enum RescueStatus {
   ACCEPTED = 'ACCEPTED',      // Mecánico aceptó
   EN_ROUTE = 'EN_ROUTE',      // Mecánico en camino
   ON_SITE = 'ON_SITE',        // Mecánico llegó
-  COMPLETED = 'COMPLETED',    // Reparación finalizada
+  IN_PROGRESS = 'IN_PROGRESS', // Reparación en sitio
+  COMPLETED = 'COMPLETED',    // Reparación finalizada y cobrada
   CANCELLED = 'CANCELLED',    // Servicio cancelado
 }

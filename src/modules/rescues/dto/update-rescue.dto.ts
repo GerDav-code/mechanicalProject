@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsUUID, IsNumber, IsString } from 'class-validator';
 import { RescueStatus } from '../enums/rescue-status.enum';
 
 export class UpdateRescueDto {
@@ -7,10 +7,18 @@ export class UpdateRescueDto {
       RescueStatus,
     ).join(', ')}`,
   })
-  @IsNotEmpty({ message: 'El estado del servicio es obligatorio' })
-  status!: RescueStatus;
+  @IsOptional() 
+  status?: RescueStatus;
 
   @IsUUID('all', { message: 'El ID del mecánico debe ser un UUID válido' })
   @IsOptional()
   mechanicId?: string;
+
+  @IsNumber({}, { message: 'El costo total debe ser un número' })
+  @IsOptional()
+  totalCost?: number;
+
+  @IsString({ message: 'Las notas deben ser texto' })
+  @IsOptional()
+  mechanicNotes?: string;
 }

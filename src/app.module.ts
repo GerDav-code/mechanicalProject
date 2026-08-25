@@ -10,6 +10,7 @@ import { TrackingModule } from './modules/tracking/tracking.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { ServiciosModule } from './servicios/servicios.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AdminModule } from './modules/admin/admin.module';
     NotificationsModule,
     AuthModule,
     AdminModule,
+    ServiciosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

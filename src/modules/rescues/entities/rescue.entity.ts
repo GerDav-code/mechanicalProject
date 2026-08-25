@@ -1,5 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { RescueStatus } from '../enums/rescue-status.enum';
+import { User } from '../../users/entities/user.entity';
+import { Vehiculo } from '../../vehiculos/entities/vehiculo.entity';
 
 @Entity('rescues') 
 export class Rescue {
@@ -9,11 +11,23 @@ export class Rescue {
   @Column()
   clientId!: string;
 
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'clientId' })
+  client!: User;
+
   @Column({ nullable: true }) 
   mechanicId?: string;
 
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'mechanicId' })
+  mechanic!: User;
+
   @Column()
   vehicleId!: string;
+
+  @ManyToOne(() => Vehiculo)
+  @JoinColumn({ name: 'vehicleId' })
+  vehicle!: Vehiculo;
 
   @Column({ type: 'float' })
   latitude!: number;
@@ -30,6 +44,12 @@ export class Rescue {
     default: RescueStatus.PENDING,
   })
   status!: RescueStatus;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  totalCost?: number;
+
+  @Column({ type: 'text', nullable: true })
+  mechanicNotes?: string;
 
   @CreateDateColumn()
   createdAt!: Date;

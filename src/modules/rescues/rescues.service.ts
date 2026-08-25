@@ -69,8 +69,15 @@ export class RescuesService {
     if (updateRescueDto.mechanicId && !rescue.mechanicId) {
       rescue.mechanicId = updateRescueDto.mechanicId;
     }
-
-    rescue.status = updateRescueDto.status;
+    if (updateRescueDto.status) {
+      rescue.status = updateRescueDto.status;
+    }
+    if (updateRescueDto.totalCost !== undefined) {
+      rescue.totalCost = updateRescueDto.totalCost;
+    }
+    if (updateRescueDto.mechanicNotes !== undefined) {
+      rescue.mechanicNotes = updateRescueDto.mechanicNotes;
+    }
 
     const updatedRescue = await this.rescueRepository.save(rescue);
 
@@ -81,6 +88,27 @@ export class RescuesService {
     );
 
     return updatedRescue;
+  }
+
+  async getMechanicDashboard(mechanicId: string) {
+    const rescues = await this.rescueRepository.find({
+      where: { mechanicId },
+      order: { updatedAt: 'DESC' },
+    });
+
+    const completed = rescues.filter((r) => r.status === RescueStatus.COMPLETED);
+    const active = rescues.find((r) => r.status !== RescueStatus.COMPLETED && r.status !== RescueStatus.CANCELLED);
+
+    const totalEarnings = completed.reduce((sum, current) => sum + Number(current.totalCost || 0), 0);
+
+    return {
+      activeRescue: active || null,
+      stats: {
+        ganancias: totalEarnings,
+        servicios: completed.length,
+      },
+      historial: completed.slice(0, 3), 
+    };
   }
 
   async findPendingRescues(): Promise<Rescue[]> {
