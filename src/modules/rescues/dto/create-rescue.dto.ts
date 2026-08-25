@@ -2,6 +2,8 @@ import {
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsString,
   IsUUID,
   MaxLength,
@@ -26,4 +28,8 @@ export class CreateRescueDto {
   @MinLength(5, { message: 'La descripción debe tener al menos 5 caracteres' })
   @MaxLength(255, { message: 'La descripción no puede exceder los 255 caracteres' })
   description!: string;
+
+  @IsOptional()
+  @IsNumber()
+  estimatedCost?: number;
 }

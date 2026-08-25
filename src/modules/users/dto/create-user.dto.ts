@@ -64,4 +64,8 @@ export class CreateUserDto {
 
   @IsOptional()
   vehiculo?: any
+
+  @IsString()
+  @IsOptional()
+  secretCode?: string;
 }

@@ -74,4 +74,14 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @Column({ type: 'decimal', precision: 2, scale: 1, default: 5.0 })
+  rating!: number;
+
+  @Column({ type: 'int', default: 0 })
+  ratingCount!: number;
+
+  @Column({ type: 'text', nullable: true })
+  descripcion!: string;
+
 }

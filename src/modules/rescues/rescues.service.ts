@@ -111,6 +111,18 @@ export class RescuesService {
     };
   }
 
+  async getClientHistory(clientId: string) {
+    const rescues = await this.rescueRepository.find({
+      where: { clientId },
+      order: { createdAt: 'DESC' },
+      relations: {
+        mechanic: true,
+        vehicle: true
+      }, 
+    });
+    return rescues;
+  }
+
   async findPendingRescues(): Promise<Rescue[]> {
     return this.rescueRepository.find({
       where: { status: RescueStatus.PENDING },
@@ -140,4 +152,15 @@ export class RescuesService {
       .orderBy('distance', 'ASC')
       .getMany();
   }
+async findAllRescues() {
+    return await this.rescueRepository.find({
+      relations: {
+        client: true,
+        mechanic: true,
+        vehicle: true
+      },
+      order: { createdAt: 'DESC' }
+    });
+  }
+
 }
